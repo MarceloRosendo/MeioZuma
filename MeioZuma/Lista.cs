@@ -106,18 +106,19 @@ namespace ListaDuplamenteEncadeada
 
         public void MostraListaINIFIM()
         {
+            Console.Clear();
             if (Início == null)
             {
                 Console.WriteLine("Fim de jogo \n\n");
             }
             else
             {
-                Aux = Início;
+                Elemento AuxLocal = Início;
 
-                while (Aux != null)
+                while (AuxLocal != null)
                 {
-                    Console.Write(Aux.Num + "  ");
-                    Aux = Aux.Prox;
+                    Console.Write(AuxLocal.Num + "  ");
+                    AuxLocal = AuxLocal.Prox;
                 }
             }
         }
@@ -188,8 +189,6 @@ namespace ListaDuplamenteEncadeada
 
         public Elemento GetElemento(int pos)
         {
-            Console.Clear();
-
             int index = 0;
 
             if (Início == null)
@@ -214,7 +213,7 @@ namespace ListaDuplamenteEncadeada
             return null;
         }
 
-        public void VerifySequence(int pos, int color)
+        public void VerifySequence(int pos, int color, ref ZumaPlayer player)
         {
             int index = 0;
             int pontos = 0;
@@ -272,6 +271,7 @@ namespace ListaDuplamenteEncadeada
 
                             if (pontos >= 2)
                             {
+                                player.Score += pontos;
                                 RemoveElementos(AuxLocal, pontos);    
                             }
                             else

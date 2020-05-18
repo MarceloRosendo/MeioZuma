@@ -4,5 +4,6 @@ namespace MeioZuma
     {
         public int ColorPicker;
         public int PositionSelector;
+        public int Score;
     }
 }

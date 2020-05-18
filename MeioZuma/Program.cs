@@ -9,8 +9,8 @@ namespace MeioZuma
     internal class Program
     {
         static public Random random = new Random();
-        static public int initialSize = 5;
-        static public int variety = 5;
+        static public int initialSize = 4;
+        static public int variety = 4;
         private static List<int> firstValues;
         private static String presentation; 
         
@@ -20,21 +20,21 @@ namespace MeioZuma
             Boolean flag = true;
             int op1, op2;
             ZumaPlayer player = new ZumaPlayer();
-
+            newGameAnimation();
             initZuma(ref zumaList);
             
             while (flag)
             {
-                Console.Clear();
                 zumaList.MostraListaINIFIM();
 
                 if (GenerateColorOption(zumaList, out op1, out op2))
                 {
-                    zumaList = GameOver(zumaList, ref flag);
+                    zumaList = GameOverWinner(zumaList, ref flag, player);
                 }
 
                 Console.WriteLine("\nEntre com a posição e com a cor a ser inserida");
-                Console.WriteLine("Cores disponiveis [" + op1 + " e " + op2 + "]\n\n\n\n\n");
+                Console.WriteLine("Cores disponiveis [" + op1 + " e " + op2 + "]\n\n\n");
+                Console.WriteLine("Pontos: " + player.Score);
                 Console.Write("Posição: ");
                 player.PositionSelector = int.Parse(Console.ReadLine());
                 
@@ -61,34 +61,58 @@ namespace MeioZuma
                 } while (true);
                 
                 
-                zumaList.VerifySequence(player.PositionSelector, player.ColorPicker);
+                zumaList.VerifySequence(player.PositionSelector, player.ColorPicker, ref player);
                 
                 if (zumaList.Tamanho >= 20)
                 {
-                    Console.WriteLine("Perdeu");
-                    Console.WriteLine("Gostaria de jogar novamente?(0-sim, *-não)");
-                    if (int.Parse(Console.ReadLine()) == 0)
-                    {
-                        Console.Clear();
-                        zumaList = new Lista();
-                        initZuma(ref zumaList);
-                    }
-                    else
-                    {
-                        flag = false;
-                    }
+                    zumaList = GameOverLoser(zumaList, ref flag, player);
                 }
 
                 if (zumaList.Tamanho == 0)
                 {
-                    zumaList = GameOver(zumaList, ref flag);
+                    zumaList = GameOverWinner(zumaList, ref flag, player);
                 }
             }
         }
 
-        private static Lista GameOver(Lista zumaList, ref bool flag)
+        private static void newGameAnimation()
         {
-            Console.WriteLine("Vencedor!");
+            Console.Clear();
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine(File.ReadAllText("home.txt"));
+                Thread.Sleep(1000);
+                Console.Clear();
+                Thread.Sleep(100);
+            }
+        }
+
+        private static Lista GameOverLoser(Lista zumaList, ref bool flag, ZumaPlayer player)
+        {
+            Console.Clear();
+            Console.WriteLine(File.ReadAllText("loser.txt"));
+            Console.WriteLine(player.Score + " pontos");
+            Console.WriteLine("Gostaria de jogar novamente?(0-sim, *-não)");
+            if (int.Parse(Console.ReadLine()) == 0)
+            {
+                Console.Clear();
+                zumaList = new Lista();
+                initZuma(ref zumaList);
+            }
+            else
+            {
+                flag = false;
+            }
+
+            return zumaList;
+        }
+
+        private static Lista GameOverWinner(Lista zumaList, ref bool flag, ZumaPlayer player)
+        {
+            Console.Clear();
+            
+            Console.WriteLine(File.ReadAllText("winner.txt"));
+            Console.WriteLine("Você fez " + player.Score + " pontos");
             Console.WriteLine("Gostaria de jogar novamente?(0-sim, *-não)");
             if (int.Parse(Console.ReadLine()) == 0)
             {
@@ -113,8 +137,6 @@ namespace MeioZuma
                     int[] aux = zumaList.pickTwoRandomColors();
                     if (aux == null)
                     {
-                        Console.WriteLine("Fim de jogo");
-
                         op1 = 0;
                         op2 = 0;
                         return true;

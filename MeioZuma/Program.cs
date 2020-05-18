@@ -31,7 +31,7 @@ namespace MeioZuma
                 op1 = generateRandomColor();
                 op2 = generateRandomColor();
                 
-                Console.WriteLine("Entre com a posição e com a cor a ser inserida");
+                Console.WriteLine("\nEntre com a posição e com a cor a ser inserida");
                 Console.WriteLine("Cores disponiveis [" + op1 + " e " + op2 + "]\n\n\n\n\n");
                 Console.Write("Posição: ");
                 player.PositionSelector = int.Parse(Console.ReadLine());
@@ -59,7 +59,7 @@ namespace MeioZuma
                 } while (true);
                 
                 
-                zumaList.verifySequence(player.PositionSelector, player.ColorPicker);
+                zumaList.VerifySequence(player.PositionSelector, player.ColorPicker);
                 
                 if (zumaList.Tamanho >= 20)
                 {
@@ -145,6 +145,6 @@ namespace MeioZuma
         {
             return random.Next(0, variety);
         }
-
+        
     }
 }

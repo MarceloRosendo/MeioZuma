@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using MeioZuma;
@@ -7,72 +8,70 @@ namespace ListaDuplamenteEncadeada
 {
     public class Lista
     {
-        private Elemento Início;            // Primeiro elemento da lista
-        private Elemento Fim;               // Último elemento da lista
-        private Elemento Aux;               // Objeto auxiliar
+        private Elemento Início;
+        private Elemento Fim;
+        private Elemento Aux;
 
-        public int Tamanho;                 // Número de Elementos da Lista
+        public int Tamanho;
 
-        public Lista()                      // Construtor da Classe
+        public Lista()
         {
             Início = null;
             Fim = null;
             Tamanho = 0;
         }
 
-        // Função para inserir um elemento no início da lista
         public void InserirInício(int Valor)
         {
-            Elemento Novo = new Elemento();     // Alocação Dinâmica - Novo Elemento para a Lista
+            Elemento Novo = new Elemento();
 
-            Novo.Num = Valor;                   // Insere o valor do elemento na lista
+            Novo.Num = Valor;
 
-            if (Início == null)                 // A lista está vazia? Primeiro elemento...
+            if (Início == null)
             {
-                Início = Novo;                  // O elemento inserido é o primeiro e o último. Guarda o endereço dele.
+                Início = Novo;
                 Fim = Novo;
 
-                Novo.Prox = null;               // O ponteiro para o próximo elemento passa a ser nulo
-                Novo.Ant = null;                // O ponteiro para o elemento anterior passa a ser nulo
+                Novo.Prox = null;
+                Novo.Ant = null;
             }
-            else                                // A lista já possui elementos?
+            else
             {
-                Novo.Prox = Início;             // O elemento Novo aponta para o elemento que já havia sido inserido anteriormente
-                Início.Ant = Novo;              // O ponteiro anterior do elemento já existente aponta para o novo elemento
-                Novo.Ant = null;                // Já que é o primeiro, o ponteiro anterior aponta para null
-                Início = Novo;                  // e o Início passa a ter o endereço do elemento Novo que acabou de ser inserido
+                Novo.Prox = Início;
+                Início.Ant = Novo;
+                Novo.Ant = null;
+                Início = Novo;
             }
 
-            Tamanho++;                          // O elemento entrou na lista
+            Tamanho++;
         }
 
-        // Função para inserir um elemento no final da lista
         public void InserirFinal(int Valor)
         {
-            Elemento Novo = new Elemento();     // Alocação Dinâmica - Novo Elemento para a Lista
+            Elemento Novo = new Elemento();
 
-            Novo.Num = Valor;                   // Insere o valor do elemento na lista
+            Novo.Num = Valor;
 
-            if (Início == null)                 // A lista está vazia? Primeiro elemento...
+            if (Início == null)
             {
-                Início = Novo;                  // O elemento inserido é o primeiro e o último. Guarda o endereço dele.
+                Início = Novo;
                 Fim = Novo;
 
-                Novo.Prox = null;               // O ponteiro para o próximo elemento passa a ser nulo
-                Novo.Ant = null;                // O ponteior para o elemento anterior para a ser nulo
+                Novo.Prox = null;
+                Novo.Ant = null;
             }
-            else                                // A lista já possui elementos?
+            else
             {
-                Fim.Prox = Novo;                // O elemento que era o último da lista aponta para o elemento inserido
-                Novo.Ant = Fim;                 // O ponteiro anterior do novo elemento aponta para o que já existia
-                Novo.Prox = null;               // O ponteiro próximo do novo elemento aponta para nada, já que ele é o último
-                Fim = Novo;                     // Atualiza o último: o elemento final passa a ser o novo elemento inserido
+                Fim.Prox = Novo;
+                Novo.Ant = Fim;
+                Novo.Prox = null;
+                Fim = Novo;
             }
 
-            Tamanho++;                          // O elemento entrou na lista
+            Tamanho++;
         }
         
-        public void inserirNoMeio(int n, int item) {
+        public void InserirNoMeio(int n, int item) {
             int index = 1;
             if (Tamanho == 0) 
             {
@@ -86,33 +85,33 @@ namespace ListaDuplamenteEncadeada
                 InserirFinal(item);
                 return;
             } 
-            Elemento Aux = Início;
+            Elemento AuxLocal = Início;
             while (index < n) {
                 index++;
-                Aux = Aux.Prox;
+                AuxLocal = AuxLocal.Prox;
             }
-            Elemento Elemento = new Elemento();
-            Elemento.Num = item;
-            Elemento.Prox = Aux.Prox;
-            Aux.Prox.Ant = Elemento;
-            Aux.Prox = Elemento;
-            Elemento.Ant = Aux;
+            Elemento Elemento = new Elemento(item);
+            
+            Elemento.Prox = AuxLocal.Prox;
+            Elemento.Ant = AuxLocal;
+
+            if (AuxLocal.Prox != null)
+            {
+                AuxLocal.Prox.Ant = Elemento;
+            }
+            
+            AuxLocal.Prox = Elemento;
             Tamanho++;
         }
 
-        //Função para mostrar todos os elementos da lista do Início ao Fim
         public void MostraListaINIFIM()
         {
-            Console.Clear();
-
             if (Início == null)
             {
-                Console.WriteLine("A lista não possui nenhum elemento!!! \n\n");
+                Console.WriteLine("Fim de jogo \n\n");
             }
             else
             {
-                Console.WriteLine("Elementos da Lista: {0}\n", Tamanho);
-
                 Aux = Início;
 
                 while (Aux != null)
@@ -122,34 +121,8 @@ namespace ListaDuplamenteEncadeada
                 }
             }
         }
-
-        //Função para mostrar todos os elementos da lista do Fim ao Início
-        public void MostraListaFIMINI()
-        {
-            Console.Clear();            // Limpa a tela
-
-            if (Início == null)         // Se não tem elemento na lista...
-            {
-                Console.WriteLine("A lista não possui nenhum elemento!!! \n\n");
-                Console.ReadKey();
-            }
-            else                        // Se a lista tem pelo menos um elemento
-            {
-                Console.WriteLine("Elementos da Lista: {0}\n", Tamanho);
-
-                Aux = Fim;              // Pega o último elemento
-
-                while (Aux != null)     // Enquanto a lista tiver elementos que apontam para algum elemento anterior da lista
-                {
-                    Console.WriteLine("{0,5}", Aux.Num);        // Mostra o elemento,
-                    Aux = Aux.Ant;                              // aponta para o elemento anterior
-                }                                               // e volta
-
-                Console.ReadKey();
-            }
-        }
-
-        private Elemento removeElemento(Elemento item)
+        
+        private Elemento RemoveElemento(Elemento item)
         {
             Elemento Aux;
             if (Início == null)
@@ -191,7 +164,7 @@ namespace ListaDuplamenteEncadeada
             return Aux;
         }
         
-        public Boolean removeElementos(Elemento item, int qt)
+        public Boolean RemoveElementos(Elemento item, int qt)
         {
             Elemento Aux = item;
             Boolean flag = true;
@@ -200,7 +173,7 @@ namespace ListaDuplamenteEncadeada
             {
                 while (qt != 0)
                 {
-                    Aux = removeElemento(Aux);
+                    Aux = RemoveElemento(Aux);
                     qt--;
                     Tamanho--;
                 }
@@ -211,114 +184,23 @@ namespace ListaDuplamenteEncadeada
             {
                 return false;
             }
-            
         }
 
-        //Função para retirar um elemento da lista
-        public void RetiraElemento(int Valor)
-        {
-            if (Início == null)                     // Se não tem elemento na lista...
-            {
-                Console.WriteLine("A lista não possui nenhum elemento!!! \n\n");        // Mostra
-            }
-            else                                    // A lista não está vazia
-            {
-                Aux = Início;                       // Pega o endereço do primeiro elemento
-
-                int Achou = 0;                      // Variável para contar quantas vezes o elemento é encontrado na lista
-
-                while (Aux != null)                 // Enquanto a lista tiver elementos que apontam para outro elemento da lista
-                {
-                    if (Aux.Num == Valor)           // O número digitado foi encontrado na lista
-                    {
-                        Achou++;                    // Conta ocorrência
-
-                        if (Aux == Início)                  // O número a ser removido é o primeiro da lista?
-                        {
-                            Início = Aux.Prox;              // O primeiro elemento foi removido e ele ganha o endereço do da frente
-
-                            if (Início != null)             // Se o elemento existe
-                            {
-                                Início.Ant = null;          // O ponteiro anterior dele não aponta para nada, já que ele é o primeiro
-                            }
-                            
-                            Aux = Início;                   // Armazena o endereço dele para o próximo uso
-
-                            Tamanho--;                      // Diminui o tamanho da lista
-                        }
-                        else if (Aux == Fim)
-                        {
-                            Fim = Fim.Ant;
-                            Fim.Prox = null;
-                            Aux = null;
-
-                            Tamanho--;
-                        }
-                        else
-                        {
-                            Aux.Ant.Prox = Aux.Prox;
-                            Aux.Prox.Ant = Aux.Ant;
-                            Aux = Aux.Prox;                 
-
-                            Tamanho--;                      
-                        }
-                    }
-                    else
-                    {
-                        Aux = Aux.Prox;
-                    }
-                }
-
-                if (Achou == 0)
-                {
-                    Console.WriteLine("O valor {0} não foi encontrado na lista!!! \n", Valor);
-                }
-                else if (Achou == 1)                        // Achou uma ocorrência
-                {
-                    Console.WriteLine("O valor {0} foi encontrado na lista e removido!!! \n", Valor);
-                }
-                else                                        // Achou mais de uma ocorrência
-                {
-                    Console.WriteLine("O valor {0} foi encontrado {1} vezes na lista e removido!!! \n", Valor, Achou);
-                }
-
-                Console.WriteLine("Número de Elementos da Lista: {0}\n\n", Tamanho);
-                Console.ReadKey();
-            }
-        }
-
-        //Função para esvaziar toda a lista
-        public void EsvaziarLista()
-        {
-            if (Início == null)                     // Se não tem elemento na lista...
-            {
-                Console.WriteLine("A lista não possui nenhum elemento!!! \n\n");        // Mostra
-                Console.ReadKey();
-            }
-            else                                    // A lista não está vazia
-            {
-                Início = null;                      // O Início da Lista não aponta para ninguém...
-                Tamanho = 0;
-            }
-        }
-        
-        public Elemento getElemento(int pos)
+        public Elemento GetElemento(int pos)
         {
             Console.Clear();
 
             int index = 0;
 
-            if (Início == null)         // Se não tem elemento na lista...
+            if (Início == null)
             {
-                Console.WriteLine("A lista não possui nenhum elemento!!! \n\n");
+                Console.WriteLine("Fim de Jogo \n\n");
             }
-            else                        // Se a lista tem pelo menos um elemento
+            else
             {
-                Console.WriteLine("Elementos da Lista: {0}\n", Tamanho);
+                Aux = Início;
 
-                Aux = Início;           // Pega o primeiro elemento
-
-                while (Aux != null)     // Enquanto a lista tiver elementos que apontam para outro elemento da lista
+                while (Aux != null)
                 {
                     index++;
                     if (index == pos)
@@ -332,21 +214,19 @@ namespace ListaDuplamenteEncadeada
             return null;
         }
 
-        public void verifySequence(int pos, int color)
+        public void VerifySequence(int pos, int color)
         {
             int index = 0;
             int pontos = 0;
-            if (Início == null)         // Se não tem elemento na lista...
+            if (Início == null)
             {
                 Console.WriteLine("A lista não possui nenhum elemento!!! \n\n");
             }
-            else                        // Se a lista tem pelo menos um elemento
+            else
             {
-                Console.WriteLine("Elementos da Lista: {0}\n", Tamanho);
-
-                Elemento AuxLocal = Início;           // Pega o primeiro elemento
+                Elemento AuxLocal = Início;
                 Elemento AuxSave = Início;
-                while (AuxLocal != null)     // Enquanto a lista tiver elementos que apontam para outro elemento da lista
+                while (AuxLocal != null)
                 {
                     index++;
                     if (index == pos)
@@ -358,12 +238,12 @@ namespace ListaDuplamenteEncadeada
                             {
                                 if (AuxLocal.Ant.Num == color)
                                 {
-                                    // percorrer para tras removendo as cores seguidas com aquele valor
-                                    // percorre primeiro contando os elementos a serem removidos
+                                    // percorrer para tras buscando o primeiro elemento da cor escolhida
                                     while (AuxLocal != null)
                                     {
                                         if (AuxLocal.Num != color)
                                         {
+                                            // salva a posição do ultimo elemento com a cor escolhida
                                             AuxSave = AuxLocal.Prox;
                                             break;
                                         }
@@ -373,10 +253,8 @@ namespace ListaDuplamenteEncadeada
                                     AuxLocal = AuxSave;
                                 }
                             }
-
                             
-                            // percorrer para frente removendo as cores seguidas com aquele valor
-                            // percorre primeiro contando os elementos a serem removidos
+                            // percorre a lista apartir do primeiro elemento com a cor escolhida pelo jogador
                             while (AuxLocal != null)
                             {
                                 if (AuxLocal.Num == color)
@@ -394,17 +272,17 @@ namespace ListaDuplamenteEncadeada
 
                             if (pontos >= 2)
                             {
-                                removeElementos(AuxLocal, pontos);    
+                                RemoveElementos(AuxLocal, pontos);    
                             }
                             else
                             {
-                                inserirNoMeio(pos,color);
+                                InserirNoMeio(pos,color);
                             }
                             break;
                         }
                         else
                         {
-                            inserirNoMeio(pos,color);
+                            InserirNoMeio(pos,color);
                             break;
                         }
                     }
@@ -412,5 +290,29 @@ namespace ListaDuplamenteEncadeada
                 }                                               
             }
         }
+
+        public HashSet<int> pickTwoRandomColors()
+        {
+            HashSet<int> colorsAvailable = new HashSet<int>();
+            Random random = new Random();
+            if (Início == null)
+            {
+                Console.WriteLine("Fim de jogo \n\n");
+            }
+            else
+            {
+                Aux = Início;
+
+                while (Aux != null)
+                {
+                    colorsAvailable.Add(Aux.Num);
+                    Aux = Aux.Prox;
+                }
+            }
+
+            // TODO get only two colors on list
+            
+        }
+        
     }
 }

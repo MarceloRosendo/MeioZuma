@@ -9,7 +9,7 @@ namespace MeioZuma
     internal class Program
     {
         static public Random random = new Random();
-        static public int initialSize = 10;
+        static public int initialSize = 5;
         static public int variety = 5;
         private static List<int> firstValues;
         private static String presentation; 
@@ -27,10 +27,12 @@ namespace MeioZuma
             {
                 Console.Clear();
                 zumaList.MostraListaINIFIM();
-                
-                op1 = generateRandomColor();
-                op2 = generateRandomColor();
-                
+
+                if (GenerateColorOption(zumaList, out op1, out op2))
+                {
+                    zumaList = GameOver(zumaList, ref flag);
+                }
+
                 Console.WriteLine("\nEntre com a posição e com a cor a ser inserida");
                 Console.WriteLine("Cores disponiveis [" + op1 + " e " + op2 + "]\n\n\n\n\n");
                 Console.Write("Posição: ");
@@ -79,20 +81,68 @@ namespace MeioZuma
 
                 if (zumaList.Tamanho == 0)
                 {
-                    Console.WriteLine("Vencedor!");
-                    Console.WriteLine("Gostaria de jogar novamente?(0-sim, *-não)");
-                    if (int.Parse(Console.ReadLine()) == 0)
-                    {
-                        Console.Clear();
-                        zumaList = new Lista();
-                        initZuma(ref zumaList);
-                    }
-                    else
-                    {
-                        flag = false;
-                    }
+                    zumaList = GameOver(zumaList, ref flag);
                 }
             }
+        }
+
+        private static Lista GameOver(Lista zumaList, ref bool flag)
+        {
+            Console.WriteLine("Vencedor!");
+            Console.WriteLine("Gostaria de jogar novamente?(0-sim, *-não)");
+            if (int.Parse(Console.ReadLine()) == 0)
+            {
+                Console.Clear();
+                zumaList = new Lista();
+                initZuma(ref zumaList);
+            }
+            else
+            {
+                flag = false;
+            }
+
+            return zumaList;
+        }
+
+        private static Boolean GenerateColorOption(Lista zumaList, out int op1, out int op2)
+        {
+            try
+            {
+                if (zumaList.Tamanho <= 2)
+                {
+                    int[] aux = zumaList.pickTwoRandomColors();
+                    if (aux == null)
+                    {
+                        Console.WriteLine("Fim de jogo");
+
+                        op1 = 0;
+                        op2 = 0;
+                        return true;
+                    }
+
+                    op1 = aux[0];
+                    op2 = aux[1];
+                }
+                else
+                {
+                    op1 = generateRandomColor();
+                    op2 = generateRandomColor();
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                op1 = 0;
+                op2 = 0;
+                return true;
+            }
+            
+        }
+
+        private static void WinMessage()
+        {
+            
         }
 
         private static Boolean entryValidator(ZumaPlayer player, Lista zumaList)
@@ -140,7 +190,7 @@ namespace MeioZuma
                 randomList.Add(aux);
             }
         }
-        
+
         private static int generateRandomColor()
         {
             return random.Next(0, variety);

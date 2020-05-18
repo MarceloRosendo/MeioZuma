@@ -291,27 +291,38 @@ namespace ListaDuplamenteEncadeada
             }
         }
 
-        public HashSet<int> pickTwoRandomColors()
+        public int[] pickTwoRandomColors()
         {
-            HashSet<int> colorsAvailable = new HashSet<int>();
+            int[] res = new int[2];
             Random random = new Random();
             if (Início == null)
             {
                 Console.WriteLine("Fim de jogo \n\n");
+                return null;
             }
             else
             {
-                Aux = Início;
-
-                while (Aux != null)
+                int randomPos;
+                if (Tamanho < 3)
                 {
-                    colorsAvailable.Add(Aux.Num);
-                    Aux = Aux.Prox;
+                    switch (Tamanho)
+                    {
+                        case 2:
+                            res[0] = GetElemento(1).Num;
+                            res[1] = GetElemento(2).Num;
+                            break;
+                        case 1:
+                            res[0] = res[1] = GetElemento(1).Num;
+                            break;
+                    }
+
+                    return res;
+                }
+                else
+                {
+                    return null;
                 }
             }
-
-            // TODO get only two colors on list
-            
         }
         
     }

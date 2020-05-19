@@ -9,7 +9,7 @@ namespace MeioZuma
     internal class Program
     {
         static public Random random = new Random();
-        static public int initialSize = 4;
+        static public int initialSize = 8;
         static public int variety = 4;
         private static List<int> firstValues;
         private static String presentation; 
